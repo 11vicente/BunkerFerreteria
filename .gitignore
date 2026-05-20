@@ -1,0 +1,9 @@
+# Claude Code
+.claude/
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Office lockfiles
+~$*
