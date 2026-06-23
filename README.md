@@ -1,63 +1,60 @@
 # Proyecto Taller de Programación
 
-Repositorio de seguimiento del proyecto. Contiene la documentación, gestión y un enlace al repositorio del producto.
+Repositorio de seguimiento del proyecto **Bunker Ferretería POS** (FERROMAT). Reúne la documentación, gestión y el código fuente del producto en un solo lugar.
 
 ## Estructura
 
-- `Documentacion/` — entregables y material de referencia (Estado del Arte, Tabla de Homologación, Recomendaciones de Stack, etc.).
+- `Documentacion/` — entregables y material de referencia (Estado del Arte, Tabla de Homologación, Recomendaciones de Stack, diagramas de arquitectura/casos de uso/secuencia, ERD de Supabase, estado de avance, presentación parcial, etc.).
 - `Gestion/` — información del equipo y gestión del proyecto.
-- `Producto/` — **submódulo** que apunta al repositorio del producto: [FelphM/Ferromat_Proyecto](https://github.com/FelphM/Ferromat_Proyecto). Aquí está el código fuente real del sistema.
+- `Producto/` — **código fuente del sistema POS**. Aplicación React + Vite con backend Supabase (Postgres + Auth + Storage). Incluye los scripts SQL del ambiente de pruebas en `Producto/backup_supaBase/`.
 
 ## Clonar el repositorio
 
-Como `Producto/` es un submódulo, hay que clonarlo con el flag `--recurse-submodules` para que descargue también el contenido del repo del producto:
-
 ```bash
-git clone --recurse-submodules https://github.com/11vicente/Proyecto_taller_programacion.git
+git clone https://github.com/11vicente/Proyecto_taller_programacion.git
+cd Proyecto_taller_programacion
 ```
 
-Si ya lo clonaste sin ese flag y la carpeta `Producto/` aparece vacía:
-
-```bash
-git submodule update --init --recursive
-```
-
-## Trabajar con el repositorio
-
-### Traer los últimos avances del producto
-
-Cuando se hagan cambios en `Ferromat_Proyecto`, para que este repo apunte a la versión más nueva:
-
-```bash
-git -C Producto pull origin main
-git add Producto
-git commit -m "Actualizar avance del producto"
-git push
-```
-
-### Trabajar dentro del producto
-
-Si quieres editar el código del producto desde aquí, entra a `Producto/` y trabaja normalmente — es el repositorio de Ferromat_Proyecto:
+## Levantar el producto en local
 
 ```bash
 cd Producto
-# editar, commit, push como siempre
-git add .
-git commit -m "tu mensaje"
+npm install
+npm run dev
+```
+
+La aplicación se sirve por defecto en `http://localhost:5173`. Requiere variables de entorno de Supabase configuradas (ver `Producto/src/lib/supabaseClient.js`).
+
+## Sincronizar `Producto/` con el repositorio del proyecto
+
+El código del producto vive originalmente en [FelphM/Ferromat_Proyecto](https://github.com/FelphM/Ferromat_Proyecto). Para traer los últimos cambios a este repo se reemplaza el contenido de `Producto/`:
+
+```powershell
+# Desde la raíz de Proyecto_taller
+Remove-Item -Recurse -Force Producto
+git clone https://github.com/FelphM/Ferromat_Proyecto Producto
+Remove-Item -Recurse -Force Producto/.git
+git add Producto/
+git commit -m "Sincronizar Producto con ultima version de Ferromat_Proyecto"
 git push
 ```
 
-Luego vuelve a la raíz y actualiza la referencia del submódulo (pasos de la sección anterior).
+## Stack tecnológico
 
-### Sincronizar tu copia local
+- **Frontend:** React 18, Vite, React Router, Bootstrap Icons
+- **Backend:** Supabase (PostgreSQL + Auth + Storage)
+- **Modo offline:** Dexie / IndexedDB
+- **Deploy:** Vercel
 
-Para traer cambios del repo padre **y** del submódulo en un solo paso:
+## Módulos del sistema
 
-```bash
-git pull
-git submodule update --remote --merge
-```
+Login/Auth, Punto de Venta (POS), Inventario, Productos, Variantes, Categorías, Proveedores, Clientes, Ventas, Compras, Cotizaciones, Facturas, Reportes, Configuración, Dashboard.
 
 ## Integrantes
 
 Ver [`Gestion/Integrantes.txt`](Gestion/Integrantes.txt).
+
+## Enlaces
+
+- Repositorio del producto: https://github.com/FelphM/Ferromat_Proyecto
+- Tablero Jira (SCRUM): https://duocuc-team-j7no4etr.atlassian.net/jira/software/projects/SCRUM/boards
