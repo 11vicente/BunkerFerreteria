@@ -1,0 +1,1128 @@
+/* ===========================================================================
+ * app.css
+ * Tema visual del sistema POS de Bunker Ferreteria.
+ *
+ * Complementa a Bootstrap 5 (no lo reemplaza). Define:
+ *   - Paleta de marca (variables CSS).
+ *   - Layout: sidebar + area de contenido.
+ *   - Componentes del POS: barra superior, carrito, grilla, panel de cobro.
+ *   - Encabezados de pagina (vistas placeholder).
+ *
+ * Convencion de prefijo: todas las clases propias empiezan con `fp-`
+ * (Ferreteria POS) para no colisionar con utilidades de Bootstrap.
+ * ======================================================================== */
+
+:root {
+  --fp-sidebar-bg: #1d2536;
+  --fp-sidebar-hover: #2a3447;
+  --fp-sidebar-text: #c7ccd6;
+  --fp-sidebar-muted: #7d8597;
+
+  --fp-accent: #e8620e; /* naranja de marca */
+  --fp-accent-soft: #fff1e6; /* naranja muy claro (fondos) */
+  --fp-accent-grad: linear-gradient(135deg, #e8620e 0%, #fb7a2a 100%);
+
+  --fp-bg: #eef0f3; /* fondo del area de contenido */
+  --fp-border: #e3e6ea;
+  --fp-radius: 0.65rem;
+}
+
+/* Reset minimo: el POS ocupa toda la pantalla sin scroll global. */
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+body {
+  overflow: hidden;
+  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  background: var(--fp-bg);
+}
+
+/* ===========================================================================
+ * LAYOUT GENERAL
+ * ======================================================================== */
+.fp-content {
+  background: var(--fp-bg);
+  padding: 0.9rem 1rem;
+  gap: 0.9rem;
+  min-width: 0; /* permite que los hijos flex se encojan sin desbordar */
+}
+
+/* ===========================================================================
+ * SIDEBAR
+ * ======================================================================== */
+.fp-sidebar {
+  width: 232px;
+  background: var(--fp-sidebar-bg);
+  color: var(--fp-sidebar-text);
+  transition: width 0.22s ease;
+  overflow: hidden; /* evita que el texto se muestre durante la transicion */
+}
+
+/* Modo colapsado (solo iconos) */
+.fp-sidebar.fp-collapsed {
+  width: 60px;
+}
+.fp-sidebar.fp-collapsed .fp-sidebar-brand {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  justify-content: center;
+}
+.fp-nav-link-collapsed {
+  justify-content: center;
+  padding-left: 0.5rem !important;
+  padding-right: 0.5rem !important;
+}
+
+/* Boton de colapso del sidebar */
+.fp-sidebar-toggle {
+  background: transparent;
+  border: none;
+  color: var(--fp-sidebar-muted);
+  width: 28px;
+  height: 28px;
+  border-radius: 0.4rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+  flex-shrink: 0;
+  font-size: 0.85rem;
+}
+.fp-sidebar-toggle:hover {
+  background: var(--fp-sidebar-hover);
+  color: #fff;
+}
+
+/* Barra superior para movil (oculta en desktop) */
+.fp-mobile-topbar {
+  display: none;
+  background: var(--fp-sidebar-bg);
+  padding: 0.55rem 1rem;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 0.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Overlay oscuro detras del sidebar en movil */
+.fp-sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.52);
+  z-index: 1040;
+  cursor: pointer;
+}
+
+.fp-sidebar-brand {
+  height: 64px;
+  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.fp-sidebar-tagline {
+  color: var(--fp-sidebar-muted);
+  font-size: 0.72rem;
+}
+
+.fp-nav-link {
+  padding: 0.6rem 0.8rem;
+  border-radius: 0.5rem;
+  color: var(--fp-sidebar-text);
+  text-decoration: none;
+  transition: background-color 0.12s ease, color 0.12s ease;
+}
+.fp-nav-link:hover {
+  background: var(--fp-sidebar-hover);
+  color: #fff;
+}
+/* Seccion activa: resaltada con el naranja de marca. */
+.fp-nav-link.active {
+  background: var(--fp-accent-grad);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 4px 10px rgba(232, 98, 14, 0.35);
+}
+
+/* Badge de conteo en items del sidebar (ej: facturas pendientes) */
+.fp-nav-badge {
+  font-size: 0.62rem;
+  font-weight: 700;
+  line-height: 1;
+  padding: 0.2em 0.5em;
+  border-radius: 9999px;
+  min-width: 1.4em;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.22);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  flex-shrink: 0;
+}
+
+/* Divisor dentro del nav del sidebar */
+.fp-sidebar-divider {
+  border-color: rgba(255, 255, 255, 0.1);
+  opacity: 1;
+}
+
+/* Zona inferior del sidebar: usuario + logout */
+.fp-sidebar-user-wrap {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 0.5rem;
+}
+.fp-sidebar-user {
+  color: var(--fp-sidebar-text);
+}
+.fp-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--fp-sidebar-hover);
+  color: var(--fp-sidebar-text);
+  flex-shrink: 0;
+}
+.fp-btn-logout {
+  background: transparent;
+  border: none;
+  color: var(--fp-sidebar-muted);
+  font-size: 0.82rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: 0.45rem;
+  transition: background 0.12s, color 0.12s;
+  cursor: pointer;
+}
+.fp-btn-logout:hover {
+  background: rgba(220, 53, 69, 0.15);
+  color: #fc8181;
+}
+
+/* ===========================================================================
+ * PANTALLA DE LOGIN
+ * ======================================================================== */
+.fp-login-bg {
+  background: linear-gradient(135deg, #1d2536 0%, #2a3447 100%);
+  min-height: 100dvh;
+  /* Sobrescribe el overflow:hidden del body para el login */
+  overflow: auto;
+}
+.fp-login-card {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 2.5rem 2rem;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+}
+.fp-login-logo {
+  width: 72px;
+  height: 72px;
+  border-radius: 1rem;
+  background: var(--fp-accent-grad);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(232, 98, 14, 0.4);
+}
+.fp-login-header h1 {
+  color: #1d2536;
+}
+.fp-btn-login {
+  background: var(--fp-accent-grad);
+  border: none;
+  color: #fff;
+  font-size: 1rem;
+  border-radius: var(--fp-radius);
+  transition: opacity 0.15s;
+}
+.fp-btn-login:hover:not(:disabled) {
+  opacity: 0.92;
+  color: #fff;
+}
+.fp-btn-login:disabled {
+  opacity: 0.6;
+}
+
+/* Splash de carga (ProtectedRoute) */
+.fp-splash-logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 1.1rem;
+  background: var(--fp-accent-grad);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(232, 98, 14, 0.35);
+}
+
+/* ===========================================================================
+ * VISTAS DEL BACK-OFFICE (Dashboard, Inventario, Ventas, ...)
+ * ======================================================================== */
+
+/* Encabezado de pagina */
+.fp-page-header {
+  flex-shrink: 0;
+}
+.fp-page-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 0.6rem;
+  background: #fff;
+  border: 1px solid var(--fp-border);
+  color: var(--fp-accent);
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+/* Cuerpo de pagina: area con scroll vertical propio */
+.fp-page-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.fp-placeholder-icon {
+  font-size: 4rem;
+  color: var(--fp-border);
+}
+
+/* Tarjeta de indicador (StatCard) */
+.fp-stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+.fp-stat-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+.fp-stat-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.min-w-0 {
+  min-width: 0;
+}
+
+/* Barra de filtros / busqueda dentro de las tablas */
+.fp-filtro-busqueda {
+  width: 280px;
+  max-width: 100%;
+}
+
+/* Ranking numerado (Dashboard) */
+.fp-rank {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--fp-accent-soft);
+  color: var(--fp-accent);
+  font-weight: 700;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Barras horizontales de los reportes */
+.fp-bar-track {
+  height: 8px;
+  background: var(--fp-border);
+  border-radius: 50rem;
+  overflow: hidden;
+  margin-top: 3px;
+}
+.fp-bar-fill {
+  height: 100%;
+  background: var(--fp-accent);
+  border-radius: 50rem;
+}
+
+/* ===========================================================================
+ * PUNTO DE VENTA - estructura
+ * ======================================================================== */
+.fp-pos {
+  gap: 0.9rem;
+  min-height: 0;
+}
+
+/* Barra superior */
+.fp-pos-topbar {
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+/* Cuerpo: 3 paneles lado a lado, cada uno con scroll interno propio. */
+.fp-pos-body {
+  display: flex;
+  gap: 0.9rem;
+  flex: 1 1 auto;
+  min-height: 0; /* clave para que los paneles internos scrolleen */
+}
+
+/* ===========================================================================
+ * PANEL IZQUIERDO - Carrito
+ * ======================================================================== */
+.fp-cart-panel {
+  flex: 1 1 290px;
+  min-width: 270px;
+  max-width: 380px;
+}
+.fp-cart-count {
+  background: var(--fp-accent);
+  color: #fff;
+  border-radius: 50rem;
+}
+.fp-cart-item {
+  border: 1px solid var(--fp-border);
+  border-radius: 0.5rem;
+  padding: 0.55rem 0.65rem;
+  background: #fff;
+}
+.fp-qty-group {
+  width: 116px;
+}
+/* Oculta las flechas nativas de los input number. */
+.fp-pos input[type='number']::-webkit-outer-spin-button,
+.fp-pos input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.fp-pos input[type='number'] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+.fp-cart-subtotal {
+  color: var(--fp-accent);
+}
+
+/* ===========================================================================
+ * PANEL CENTRAL - Catalogo
+ * ======================================================================== */
+.fp-product-grid {
+  flex: 2 1 460px;
+  min-width: 0;
+}
+
+/* Pestanas de categoria */
+.fp-cat-tab {
+  background: #fff;
+  border: 1px solid var(--fp-border);
+  color: #495057;
+  font-weight: 500;
+}
+.fp-cat-tab:hover {
+  border-color: var(--fp-accent);
+  color: var(--fp-accent);
+}
+.fp-cat-tab.active {
+  background: var(--fp-accent);
+  border-color: var(--fp-accent);
+  color: #fff;
+}
+
+/* Grilla de tarjetas */
+.fp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+  gap: 0.75rem;
+}
+
+.fp-product-card {
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.1s ease,
+    border-color 0.1s ease;
+  border: 1px solid var(--fp-border) !important;
+}
+.fp-product-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--fp-accent) !important;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1) !important;
+}
+.fp-product-card .fp-edit-btn {
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+.fp-product-card:hover .fp-edit-btn {
+  opacity: 1 !important;
+}
+.fp-product-icon {
+  font-size: 1.85rem;
+  color: #ced4da;
+}
+.fp-product-name {
+  font-size: 0.86rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* maximo 2 lineas, recorta el resto */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.fp-product-price {
+  color: var(--fp-accent);
+  font-size: 1.02rem;
+}
+.fp-stock-badge {
+  font-weight: 600;
+  font-size: 0.68rem;
+}
+
+/* ===========================================================================
+ * PANEL DERECHO - Cobro
+ * ======================================================================== */
+.fp-checkout {
+  flex: 0 0 338px;
+}
+
+/* Caja de totales (naranja destacada) */
+.fp-totals-box {
+  background: var(--fp-accent-grad);
+  color: #fff;
+  border-radius: var(--fp-radius);
+  padding: 1rem 1.1rem;
+  box-shadow: 0 6px 16px rgba(232, 98, 14, 0.3);
+  flex-shrink: 0;
+}
+.fp-total-amount {
+  font-size: 1.9rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.fp-checkout-body {
+  min-height: 0;
+  padding-right: 0.15rem;
+}
+
+/* Etiquetas de campo */
+.fp-field-label {
+  display: block;
+  margin: 0.85rem 0 0.3rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #8a909c;
+}
+
+/* Metodos de pago */
+.fp-pay-methods {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+.fp-pay-method {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.6rem 0.25rem;
+  background: #fff;
+  border: 1.5px solid var(--fp-border);
+  border-radius: 0.5rem;
+  color: #6c757d;
+  transition: all 0.12s ease;
+}
+.fp-pay-method:hover {
+  border-color: var(--fp-accent);
+}
+.fp-pay-method.active {
+  border-color: var(--fp-accent);
+  background: var(--fp-accent-soft);
+  color: var(--fp-accent);
+  font-weight: 600;
+}
+
+/* Montos rapidos */
+.fp-quick-amounts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+}
+
+/* Vuelto / falta */
+.fp-vuelto {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.6rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+}
+.fp-vuelto.ok {
+  background: #e7f6ec;
+  color: #1a7a3c;
+}
+.fp-vuelto.falta {
+  background: #fdecec;
+  color: #c0392b;
+}
+
+/* Acciones de cobro */
+.fp-checkout-actions {
+  padding-top: 0.75rem;
+  flex-shrink: 0;
+}
+.fp-btn-cobrar {
+  background: #ffc107;
+  border: none;
+  color: #1d2536;
+  font-weight: 700;
+  font-size: 1.15rem;
+  padding: 0.85rem 1rem;
+  border-radius: var(--fp-radius);
+}
+.fp-btn-cobrar:hover:not(:disabled) {
+  background: #e0a800;
+  color: #1d2536;
+}
+.fp-btn-cobrar:disabled {
+  opacity: 0.55;
+}
+
+/* Boton naranja reutilizable (ej: "Recuperar" en el modal) */
+.fp-btn-accent {
+  background: var(--fp-accent);
+  border: none;
+  color: #fff;
+  font-weight: 600;
+}
+.fp-btn-accent:hover {
+  background: #cf550b;
+  color: #fff;
+}
+
+/* ===========================================================================
+ * BOTONES: ligeramente más grandes en back-office (fuera del POS)
+ * ======================================================================== */
+
+/* btn-sm en back-office: un paso más grande que el default */
+.fp-page-body .btn-sm,
+.fp-page-header .btn-sm {
+  --bs-btn-padding-y: 0.35rem;
+  --bs-btn-padding-x: 0.65rem;
+  --bs-btn-font-size: 0.875rem;
+}
+
+/* Botones regulares en back-office */
+.fp-page-body .btn:not(.btn-sm):not(.btn-close),
+.fp-page-header .btn:not(.btn-sm):not(.btn-close) {
+  --bs-btn-padding-y: 0.45rem;
+  --bs-btn-padding-x: 0.95rem;
+}
+
+/* Botones dentro de modales (aplica a toda la app, no solo POS) */
+.modal-footer .btn {
+  --bs-btn-padding-y: 0.45rem;
+  --bs-btn-padding-x: 0.95rem;
+}
+.modal-body .btn-sm {
+  --bs-btn-padding-y: 0.35rem;
+  --bs-btn-padding-x: 0.65rem;
+}
+
+/* ===========================================================================
+ * BUSCADOR DE CLIENTES (CheckoutPanel)
+ * ======================================================================== */
+.fp-cliente-wrap {
+  position: relative;
+}
+.fp-cliente-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid var(--fp-border);
+  border-radius: var(--fp-radius);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.13);
+  z-index: 300;
+  max-height: 260px;
+  overflow-y: auto;
+}
+.fp-cliente-option {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  background: transparent;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.1s;
+  font-size: 0.87rem;
+}
+.fp-cliente-option:hover,
+.fp-cliente-option:focus {
+  background: var(--fp-accent-soft);
+  outline: none;
+}
+.fp-cliente-option-nuevo {
+  flex-direction: row;
+  align-items: center;
+  color: var(--fp-accent);
+  font-weight: 600;
+  border-top: 1px solid var(--fp-border);
+}
+.fp-cliente-option-nuevo:hover,
+.fp-cliente-option-nuevo:focus {
+  background: var(--fp-accent-soft);
+}
+.fp-cliente-empty {
+  padding: 0.55rem 0.75rem;
+  color: #6c757d;
+  font-size: 0.85rem;
+}
+
+/* ===========================================================================
+ * RESPONSIVE — TABLET (< 1080px): comprimir paneles POS
+ * ======================================================================== */
+@media (max-width: 1079.98px) {
+  .fp-cart-panel {
+    flex: 1 1 240px;
+    min-width: 220px;
+    max-width: 300px;
+  }
+  .fp-checkout {
+    flex: 0 0 300px;
+  }
+}
+
+/* ===========================================================================
+ * RESPONSIVE — MOVIL (< 768px)
+ * ======================================================================== */
+@media (max-width: 767.98px) {
+  /* Mostrar barra superior movil */
+  .fp-mobile-topbar {
+    display: flex !important;
+  }
+
+  /* Sidebar como panel superpuesto */
+  .fp-sidebar {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    height: 100%;
+    z-index: 1050;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease !important;
+    width: 232px !important; /* siempre full en movil, nunca colapsado */
+  }
+  .fp-sidebar.fp-mobile-open {
+    transform: translateX(0);
+  }
+
+  /* Ajustar padding del area de contenido */
+  .fp-content {
+    padding: 0.5rem !important;
+    gap: 0.5rem !important;
+    overflow-y: auto !important;
+  }
+
+  /* POS: altura automatica para que el contenido pueda scrollear */
+  .fp-pos {
+    height: auto !important;
+    min-height: 0;
+  }
+
+  /* Paneles del POS en columna */
+  .fp-pos-body {
+    flex-direction: column;
+    overflow: visible;
+    height: auto;
+    flex: none !important;
+  }
+
+  .fp-cart-panel {
+    flex: none !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .fp-product-grid {
+    flex: 0 0 380px !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .fp-checkout {
+    flex: none !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  /* El cuerpo del checkout no necesita scroll interno en movil */
+  .fp-checkout-body {
+    overflow: visible !important;
+    flex: none !important;
+  }
+
+  /* La barra del POS puede hacer salto de linea en movil */
+  .fp-pos-topbar {
+    flex-wrap: wrap;
+  }
+
+  /* Tablas con scroll horizontal en paginas de back-office */
+  .fp-page-body {
+    overflow-x: hidden;
+  }
+}
+
+/* ===========================================================================
+ * MODO OSCURO — Bootstrap 5.3 data-bs-theme="dark"
+ * Bootstrap maneja: cards, tables, forms, modals, badges, buttons.
+ * Aquí sobreescribimos solo los elementos fp-* y utilidades bg-white.
+ * ======================================================================== */
+[data-bs-theme="dark"] {
+  --fp-bg:          #13151f;
+  --fp-border:      #2c3048;
+  --fp-accent-soft: rgba(232, 98, 14, 0.18);
+}
+
+/* Fondo principal del área de contenido */
+[data-bs-theme="dark"] .fp-content {
+  background: var(--fp-bg);
+}
+
+/* Utilidad bg-white en headers/footers de cards — Bootstrap no la toca */
+[data-bs-theme="dark"] .bg-white {
+  background-color: var(--bs-body-bg) !important;
+}
+
+/* table-light es blanco; en dark mode debe usar el fondo de la tabla */
+[data-bs-theme="dark"] .table-light,
+[data-bs-theme="dark"] .table-light > th,
+[data-bs-theme="dark"] .table-light > td {
+  background-color: var(--bs-tertiary-bg) !important;
+  color: var(--bs-body-color);
+}
+
+/* Tarjeta de producto */
+[data-bs-theme="dark"] .fp-product-card {
+  background: var(--bs-body-bg) !important;
+  border-color: var(--fp-border) !important;
+}
+[data-bs-theme="dark"] .fp-product-icon {
+  color: #4a5068;
+}
+
+/* Item del carrito */
+[data-bs-theme="dark"] .fp-cart-item {
+  background: var(--bs-body-bg);
+  border-color: var(--fp-border);
+}
+
+/* Métodos de pago */
+[data-bs-theme="dark"] .fp-pay-method {
+  background: var(--bs-body-bg);
+  border-color: var(--fp-border);
+  color: var(--bs-body-color);
+}
+[data-bs-theme="dark"] .fp-pay-method.active {
+  background: var(--fp-accent-soft);
+  color: var(--fp-accent);
+}
+
+/* Dropdown de clientes/productos */
+[data-bs-theme="dark"] .fp-cliente-dropdown {
+  background: var(--bs-body-bg);
+  border-color: var(--fp-border);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+[data-bs-theme="dark"] .fp-cliente-option:hover,
+[data-bs-theme="dark"] .fp-cliente-option:focus {
+  background: var(--fp-accent-soft);
+}
+[data-bs-theme="dark"] .fp-cliente-option-nuevo {
+  border-top-color: var(--fp-border);
+}
+[data-bs-theme="dark"] .fp-cliente-empty {
+  color: var(--bs-secondary-color);
+}
+
+/* Vuelto / falta */
+[data-bs-theme="dark"] .fp-vuelto.ok {
+  background: rgba(26, 122, 60, 0.2);
+  color: #5dd08a;
+}
+[data-bs-theme="dark"] .fp-vuelto.falta {
+  background: rgba(192, 57, 43, 0.2);
+  color: #f28b82;
+}
+
+/* Pestañas de categoría en POS */
+[data-bs-theme="dark"] .fp-cat-tab {
+  background: var(--bs-body-bg);
+  border-color: var(--fp-border);
+  color: var(--bs-body-color);
+}
+
+/* Icono de página */
+[data-bs-theme="dark"] .fp-page-icon {
+  background: var(--bs-body-bg);
+  border-color: var(--fp-border);
+}
+
+/* Login */
+[data-bs-theme="dark"] .fp-login-card {
+  background: #1e2130;
+}
+[data-bs-theme="dark"] .fp-login-header h1 {
+  color: var(--bs-body-color);
+}
+
+/* Filtro de búsqueda con fondo blanco */
+[data-bs-theme="dark"] .input-group-text.bg-white {
+  background-color: var(--bs-body-bg) !important;
+  border-color: var(--bs-border-color);
+  color: var(--bs-body-color);
+}
+
+/* Barra superior móvil */
+[data-bs-theme="dark"] .fp-mobile-topbar {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+/* ===========================================================================
+ * MODO OSCURO — Mejoras de contraste de texto
+ * Los colores grises hardcodeados del modo claro se vuelven invisibles sobre
+ * fondos oscuros. Aquí se reemplazan por equivalentes más brillantes.
+ * ======================================================================== */
+
+/* Labels de campo en el panel de cobro (CheckoutPanel) */
+[data-bs-theme="dark"] .fp-field-label {
+  color: #b0bace;
+}
+
+/* Taglines del sidebar (rol del usuario, subtítulo de marca) */
+[data-bs-theme="dark"] .fp-sidebar-tagline {
+  color: #8ea8c8;
+}
+
+/* Texto secundario: ligeramente más brillante que el Bootstrap default */
+[data-bs-theme="dark"] .text-secondary {
+  color: rgba(186, 196, 214, 0.9) !important;
+}
+[data-bs-theme="dark"] .text-muted {
+  color: rgba(172, 184, 202, 0.8) !important;
+}
+
+/* small dentro de tables y cards */
+[data-bs-theme="dark"] table small,
+[data-bs-theme="dark"] .card small {
+  color: rgba(172, 184, 202, 0.85);
+}
+
+/* Labels de formulario en modales */
+[data-bs-theme="dark"] .form-label,
+[data-bs-theme="dark"] .form-check-label {
+  color: var(--bs-body-color);
+}
+
+/* Texto secundario dentro de stat cards */
+[data-bs-theme="dark"] .fp-stat-label {
+  color: rgba(186, 196, 214, 0.95) !important;
+}
+
+/* Subtítulo en PageHeader */
+[data-bs-theme="dark"] .text-body-secondary {
+  color: rgba(186, 196, 214, 0.85) !important;
+}
+
+/* Bordes de cards más definidos */
+[data-bs-theme="dark"] .card {
+  border-color: var(--fp-border) !important;
+}
+
+/* Separadores horizontales */
+[data-bs-theme="dark"] hr {
+  border-color: rgba(255, 255, 255, 0.12);
+  opacity: 1;
+}
+
+/* Placeholder de inputs más visible */
+[data-bs-theme="dark"] input::placeholder,
+[data-bs-theme="dark"] textarea::placeholder {
+  color: rgba(140, 155, 180, 0.65) !important;
+  opacity: 1;
+}
+
+/* Input group text (prefijos $, %, unidades) */
+[data-bs-theme="dark"] .input-group-text {
+  color: rgba(186, 196, 214, 0.9);
+  border-color: var(--bs-border-color);
+}
+
+/* Badge secondary más legible */
+[data-bs-theme="dark"] .badge.bg-secondary,
+[data-bs-theme="dark"] .badge.text-bg-secondary {
+  background-color: #3d4a60 !important;
+  color: #c8d4e8 !important;
+}
+
+/* Texto de la tagline fp-sidebar-muted (logout, toggle botón) */
+[data-bs-theme="dark"] .fp-btn-logout {
+  color: #8ea8c8;
+}
+[data-bs-theme="dark"] .fp-btn-logout:hover {
+  color: #fc8181;
+  background: rgba(220, 53, 69, 0.15);
+}
+
+/* Avatar sidebar */
+[data-bs-theme="dark"] .fp-avatar {
+  background: rgba(255, 255, 255, 0.08);
+  color: #b0bace;
+}
+
+/* Descripciones dentro de los radios del AjusteStockModal */
+[data-bs-theme="dark"] .form-check-input:not(:checked) ~ div small {
+  color: rgba(172, 184, 202, 0.82);
+}
+
+/* Texto secundario de página sin etiqueta explícita */
+[data-bs-theme="dark"] p.text-secondary,
+[data-bs-theme="dark"] span.text-secondary,
+[data-bs-theme="dark"] div.text-secondary {
+  color: rgba(186, 196, 214, 0.88) !important;
+}
+
+/* ===========================================================================
+ * MINI CALENDARIO — FacturasPage
+ * ======================================================================== */
+.fp-cal-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+.fp-cal-mes-label {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.fp-cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+.fp-cal-dia-label {
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--bs-secondary-color, #6c757d);
+  padding: 2px 0 4px;
+}
+.fp-cal-dia {
+  position: relative;
+  aspect-ratio: 1;
+  border: none;
+  background: transparent;
+  border-radius: 50%;
+  font-size: 0.78rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 1;
+  transition: background 0.1s;
+  color: inherit;
+}
+.fp-cal-dia:hover {
+  background: var(--bs-gray-200, #e9ecef);
+}
+.fp-cal-vacio {
+  aspect-ratio: 1;
+}
+.fp-cal-hoy {
+  font-weight: 700;
+  color: var(--fp-accent) !important;
+  outline: 2px solid var(--fp-accent);
+  outline-offset: -2px;
+}
+.fp-cal-vencida {
+  background: #fee2e2 !important;
+  color: #b91c1c !important;
+}
+.fp-cal-proxima {
+  background: #fef9c3 !important;
+  color: #92400e !important;
+}
+.fp-cal-al-dia {
+  background: #dcfce7 !important;
+  color: #15803d !important;
+}
+.fp-cal-sel {
+  outline: 2px solid #0d6efd;
+  outline-offset: -2px;
+}
+.fp-cal-count {
+  position: absolute;
+  bottom: 1px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: currentColor;
+}
+.fp-nav-badge-dot {
+  position: absolute;
+  top: -3px;
+  right: -4px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--bs-danger);
+  border: 1.5px solid var(--fp-sidebar-bg);
+}
+.fp-cal-legend-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.fp-cal-legend-dot.fp-cal-vencida {
+  background: #fee2e2;
+  outline: 1px solid #b91c1c;
+}
+.fp-cal-legend-dot.fp-cal-proxima {
+  background: #fef9c3;
+  outline: 1px solid #d97706;
+}
+.fp-cal-legend-dot.fp-cal-al-dia {
+  background: #dcfce7;
+  outline: 1px solid #15803d;
+}
+
+/* Dark mode overrides para el calendario */
+[data-bs-theme="dark"] .fp-cal-dia:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+[data-bs-theme="dark"] .fp-cal-vencida {
+  background: rgba(220, 53, 69, 0.25) !important;
+  color: #f87171 !important;
+}
+[data-bs-theme="dark"] .fp-cal-proxima {
+  background: rgba(234, 179, 8, 0.2) !important;
+  color: #fde047 !important;
+}
+[data-bs-theme="dark"] .fp-cal-al-dia {
+  background: rgba(34, 197, 94, 0.2) !important;
+  color: #4ade80 !important;
+}
