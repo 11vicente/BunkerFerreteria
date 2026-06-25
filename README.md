@@ -1,6 +1,6 @@
 # Bunker Ferreteria POS
 
-Repositorio de seguimiento del proyecto **Bunker Ferretería POS** (FERROMAT). Reúne la documentación, gestión y el código fuente del producto en un solo lugar.
+Repositorio de seguimiento del proyecto **Bunker Ferretería POS**. Reúne la documentación, gestión y el código fuente del producto en un solo lugar.
 
 ## Estructura
 
