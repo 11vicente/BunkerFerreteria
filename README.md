@@ -1,4 +1,4 @@
-# Proyecto Taller de Programación
+# Bunker Ferreteria POS
 
 Repositorio de seguimiento del proyecto **Bunker Ferretería POS** (FERROMAT). Reúne la documentación, gestión y el código fuente del producto en un solo lugar.
 
