@@ -27,15 +27,15 @@ La aplicación se sirve por defecto en `http://localhost:5173`. Requiere variabl
 
 ## Sincronizar `Producto/` con el repositorio del proyecto
 
-El código del producto vive originalmente en [FelphM/Ferromat_Proyecto](https://github.com/FelphM/Ferromat_Proyecto). Para traer los últimos cambios a este repo se reemplaza el contenido de `Producto/`:
+El código del producto vive originalmente en [FelphM/BunkerFerreteriaPOS_Proyecto](https://github.com/FelphM/BunkerFerreteriaPOS_Proyecto). Para traer los últimos cambios a este repo se reemplaza el contenido de `Producto/`:
 
 ```powershell
 # Desde la raíz de Proyecto_taller
 Remove-Item -Recurse -Force Producto
-git clone https://github.com/FelphM/Ferromat_Proyecto Producto
+git clone https://github.com/FelphM/BunkerFerreteriaPOS_Proyecto Producto
 Remove-Item -Recurse -Force Producto/.git
 git add Producto/
-git commit -m "Sincronizar Producto con ultima version de Ferromat_Proyecto"
+git commit -m "Sincronizar Producto con ultima version de BunkerFerreteriaPOS_Proyecto"
 git push
 ```
 
@@ -56,5 +56,5 @@ Ver [`Gestion/Integrantes.txt`](Gestion/Integrantes.txt).
 
 ## Enlaces
 
-- Repositorio del producto: https://github.com/FelphM/Ferromat_Proyecto
+- Repositorio del producto: https://github.com/FelphM/BunkerFerreteriaPOS_Proyecto
 - Tablero Jira (SCRUM): https://duocuc-team-j7no4etr.atlassian.net/jira/software/projects/SCRUM/boards
